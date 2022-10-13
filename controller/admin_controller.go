@@ -6,7 +6,9 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
 	"github.com/kataras/iris/v12/sessions"
+	"webProject/model"
 	"webProject/service"
+	"webProject/util"
 )
 
 /*我们使用mvc包模式来进行功能开发，在进行了结构体定义以后，我们接着定义控制器。
@@ -89,6 +91,40 @@ func (ac AdminController) PostLogin(context iris.Context) mvc.Response {
 			"status":  "1",
 			"success": "登录成功",
 			"message": "管理员登录成功",
+		},
+	}
+}
+
+// 在session中返回管理员信息 路径/admin/info
+
+func (ac *AdminController) GetInfo() mvc.Response {
+	userByte := ac.Session.Get(ADMIN)
+	if userByte == nil {
+		return mvc.Response{
+			Object: map[string]interface{}{
+				"status":  util.RECODE_UNLOGIN,
+				"type":    util.EEROR_UNLOGIN,
+				"message": util.Recode2Text(util.EEROR_UNLOGIN),
+			},
+		}
+	}
+
+	var admin model.Admin
+	err := json.Unmarshal(userByte.([]byte), &admin)
+	if err != nil {
+		return mvc.Response{
+			Object: map[string]interface{}{
+				"status":  util.RECODE_UNLOGIN,
+				"type":    util.EEROR_UNLOGIN,
+				"message": util.Recode2Text(util.EEROR_UNLOGIN),
+			},
+		}
+	}
+
+	return mvc.Response{
+		Object: map[string]interface{}{
+			"status": util.RECODE_OK,
+			"data":   admin.AdmintoRespone(),
 		},
 	}
 }

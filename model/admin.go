@@ -6,6 +6,7 @@ import "time"
 model
 */
 // 管理员用户信息
+
 type Admin struct {
 	AdminId   int64     `xorm:"pk autoincr" json:"id"`
 	AdminName string    `xorm:"varchar(32)" json:"admin_name"`
@@ -18,5 +19,19 @@ type Admin struct {
 	//City      *City     `xorm:"- <- ->"`
 }
 
-//type City struct {
-//}
+// type City struct {
+// }
+// 将admin转化为json形式
+
+func (ad *Admin) AdmintoRespone() interface{} {
+	respDesc := map[string]interface{}{
+		"user_name": ad.AdminName,
+		"id":        ad.AdminId,
+		"creatTime": ad.CreatTime,
+		"status":    ad.Status,
+		"avatar":    ad.Avatar,
+		"city":      ad.CityName,
+		"admin":     "管理员",
+	}
+	return respDesc
+}
