@@ -1,0 +1,6 @@
+{
+  "app_name": "CMS",
+  "port": "8000",
+  "static_path": "/manage/static",
+  "mode": "dev"
+}
