@@ -128,3 +128,38 @@ func (ac *AdminController) GetInfo() mvc.Response {
 		},
 	}
 }
+
+// 退出登录
+// 请求方式：get
+// 请求路径/admin/singout
+func (ac *AdminController) GetSingout() mvc.Response {
+	//这里就是删除了Session中的东西
+	ac.Session.Delete(ADMIN)
+	return mvc.Response{
+		Object: map[string]interface{}{
+			"status":  util.RECODE_OK,
+			"success": util.Recode2Text(util.RESPMSG_SIGNOUT),
+		},
+	}
+}
+
+// 获取管理员数量接口路径/admin/count
+func (ac *AdminController) GetCount() mvc.Response {
+	total, err := ac.Service.GetAdminCount()
+	if err != nil {
+		return mvc.Response{
+			Object: map[string]interface{}{
+				"status":  util.RECODE_FAIL,
+				"message": util.Recode2Text(util.RESPMSG_ERRORADMINCOUNT),
+				"count":   0,
+			},
+		}
+	}
+
+	return mvc.Response{
+		Object: map[string]interface{}{
+			"status": util.RECODE_OK,
+			"count":  total,
+		},
+	}
+}

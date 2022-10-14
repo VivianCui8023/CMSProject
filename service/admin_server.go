@@ -19,6 +19,7 @@ type AdminService interface {
 	GetAdminNameAndPassword(name string, pwd string) (model.Admin, bool)
 
 	//统计方法（未实现）
+	GetAdminCount() (int64, error)
 }
 
 // 定义一个AdminService的（内部）实现类,注意这个实现类首字母小写
@@ -29,7 +30,7 @@ type adminService struct {
 
 // 为了给内部实现类成员变量赋值还要写一个方法实现？
 func NewAdminService(db *xorm.Engine) AdminService {
-	//这个地方为什么取地址？在没有实现全部方法时候，还不能说adminService是AdminService的实现类
+	//这个地方为什么取地址？在没有实现全部方法时候，还不能说adminService是AdminService的实现类,不实现会报错
 	return &adminService{
 		engine: db,
 	}
@@ -42,4 +43,16 @@ func (ads *adminService) GetAdminNameAndPassword(name string, pwd string) (model
 	fmt.Printf("admin:%s,adminid:%d\n", admin, admin.AdminId)
 	return admin, admin.AdminId != 0
 
+}
+
+func (ads *adminService) GetAdminCount() (int64, error) {
+	admin := new(model.Admin)
+	//conut函数返回的是int64类型
+	total, err := ads.engine.Count(admin)
+	if err != nil {
+		panic(err.Error())
+		return 0, err
+	}
+
+	return total, nil
 }
