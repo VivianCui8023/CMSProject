@@ -47,9 +47,9 @@ func (sc *StatisController) GetCount() mvc.Response {
 	case "admin":
 		result = sc.Service.GetAdminDailyCount(getDate)
 	case "user":
-		iris.New().Logger().Error("-------" + getDate + "-------")
 		result = sc.Service.GetUserDailyCount(getDate)
-		//case "order":
+	case "order":
+		result = sc.Service.GetOrderDailyCount(getDate)
 
 	}
 

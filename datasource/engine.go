@@ -17,7 +17,8 @@ func Engine_sql() *xorm.Engine {
 	engine.SetMapper(core.GonicMapper{})
 	err = engine.Sync2(
 		new(model.Admin),
-		new(model.User))
+		new(model.User),
+		new(model.UserOrder))
 	if err != nil {
 		panic(err.Error())
 	}
