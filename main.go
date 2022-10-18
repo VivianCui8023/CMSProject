@@ -128,4 +128,13 @@ func mvcHandle(app *iris.Application) {
 	)
 	//MVC处理各种get\post等，在controller中写
 	admin.Handle(new(controller.AdminController))
+
+	//统计功能
+	statisServer := service.NewStatisService(engine)
+	statis := mvc.New(app.Party("/statis/{model}/{date}/"))
+	statis.Register(
+		statisServer,
+		sessionManage.Start,
+	)
+	statis.Handle(new(controller.StatisController))
 }

@@ -15,9 +15,11 @@ func Engine_sql() *xorm.Engine {
 	//设置对象 与数据库映射，支持自动建表
 	err = engine.CreateTables(new(model.Admin))
 	engine.SetMapper(core.GonicMapper{})
-	err = engine.Sync2(new(model.Admin))
+	err = engine.Sync2(
+		new(model.Admin),
+		new(model.User))
 	if err != nil {
-		panic(err)
+		panic(err.Error())
 	}
 	//打印查询语句
 	engine.ShowSQL(true)

@@ -6,6 +6,7 @@ import "time"
 model
 */
 // 管理员用户信息
+//用于生成数据库表的，字段需要对应
 
 type Admin struct {
 	AdminId   int64     `xorm:"pk autoincr" json:"id"`
