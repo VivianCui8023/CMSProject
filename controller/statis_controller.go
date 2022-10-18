@@ -6,6 +6,7 @@ import (
 	"github.com/kataras/iris/v12/mvc"
 	"github.com/kataras/iris/v12/sessions"
 	"strings"
+	"time"
 	"webProject/service"
 	"webProject/util"
 )
@@ -41,7 +42,9 @@ func (sc *StatisController) GetCount() mvc.Response {
 
 	mode := pathSlice[1]
 	getDate := pathSlice[2]
-	fmt.Printf("mode%s,getdate%s", mode, getDate)
+	if getDate == "NaN-NaN-NaN" {
+		getDate = time.Now().Format("2006-01-02")
+	}
 	var result int64
 	switch mode {
 	case "admin":
