@@ -2,5 +2,20 @@
   "app_name": "CMS",
   "port": "8000",
   "static_path": "/manage/static",
-  "mode": "dev"
+  "mode": "dev",
+  "data_base": {
+    "drive":"mysql",
+    "host": "127.0.0.1",
+    "port": "3306",
+    "user": "root",
+    "pwd": "root",
+    "database": "cmsdata"
+  },
+  "redis": {
+    "network": "tcp",
+    "port": "6379",
+    "addr": "127.0.0.1",
+    "password": "",
+    "prefix": "cms_"
+  }
 }

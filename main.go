@@ -4,13 +4,13 @@ data:2022-10-10
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
 	"github.com/kataras/iris/v12/sessions"
-	"os"
+
 	"time"
+	"webProject/config"
 	"webProject/controller"
 	"webProject/datasource"
 	"webProject/service"
@@ -24,7 +24,7 @@ func main() {
 	Configuration(app)
 
 	//读取服务器配置json文件
-	config := InitAppConfig()
+	config := config.InitAppConfig()
 
 	addr := "localhost:" + config.Port
 	//路由设置处理
@@ -77,35 +77,6 @@ func Configuration(app *iris.Application) {
 			"massage":    "service error",
 		})
 	})
-}
-
-type AppConfig struct {
-	AppName    string `json:"app_name"`
-	Port       string `json:"port"`
-	StaticPath string `json:"static_path"`
-	Mode       string `json:"mode"`
-}
-
-func InitAppConfig() *AppConfig {
-	//打开文件
-	file, err := os.Open("./config.json")
-	HandleError(err)
-	defer file.Close()
-	//读取数据
-	//jsonData, err := ioutil.ReadAll()
-	decoder := json.NewDecoder(file)
-	con := AppConfig{}
-	err = decoder.Decode(&con)
-	HandleError(err)
-	return &con
-}
-
-// 错误处理
-
-func HandleError(err error) {
-	if err != nil {
-		panic(err.Error())
-	}
 }
 
 // mvc架构处理
