@@ -28,7 +28,7 @@ func main() {
 
 	addr := "localhost:" + config.Port
 	//路由设置处理
-	mvcHandle(app)
+	mvcHandle(app, config)
 	//启动iris服务
 	app.Run(
 		iris.Addr(addr),
@@ -80,7 +80,7 @@ func Configuration(app *iris.Application) {
 }
 
 // mvc架构处理
-func mvcHandle(app *iris.Application) {
+func mvcHandle(app *iris.Application, config *config.AppConfig) {
 	//启用Session,主要用于设置登录超时
 	fmt.Println("-------------mvc handle---------")
 	sessionManage := sessions.New(sessions.Config{
@@ -88,7 +88,8 @@ func mvcHandle(app *iris.Application) {
 		Expires: 24 * time.Hour,
 	})
 	//获取数据库引擎
-	engine := datasource.Engine_sql()
+	println(config)
+	engine := datasource.Engine_sql(config)
 	//获取数据服务
 	adminService := service.NewAdminService(engine)
 
