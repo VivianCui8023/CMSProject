@@ -60,7 +60,8 @@ func (sc *StatisController) GetCount() mvc.Response {
 			result = sc.Service.GetAdminDailyCount(getDate)
 			sc.Session.Set(ADMINMODEL+getDate, result)
 		} else {
-			sessionResult := sessionStatus.(int64)
+			sessionResult := sessionStatus.(float64)
+			fmt.Println("--------------使用session中数据了------------")
 			return mvc.Response{
 				Object: map[string]interface{}{
 					"status": util.RECODE_OK,
@@ -75,7 +76,7 @@ func (sc *StatisController) GetCount() mvc.Response {
 			result = sc.Service.GetUserDailyCount(getDate)
 			sc.Session.Set(USERMODEL+getDate, result)
 		} else {
-			sessionResult := sessionStatus.(int64)
+			sessionResult := sessionStatus.(float64)
 			return mvc.Response{
 				Object: map[string]interface{}{
 					"status": util.RECODE_OK,
@@ -89,7 +90,7 @@ func (sc *StatisController) GetCount() mvc.Response {
 			result = sc.Service.GetOrderDailyCount(getDate)
 			sc.Session.Set(ORDERMODEL+getDate, result)
 		} else {
-			sessionResult := sessionStatus.(int64)
+			sessionResult := sessionStatus.(float64)
 			return mvc.Response{
 				Object: map[string]interface{}{
 					"status": util.RECODE_OK,
