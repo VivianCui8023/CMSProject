@@ -12,12 +12,19 @@ import (
 )
 
 // 统计信息处理
+
 type StatisController struct {
 	Ctx     iris.Context
 	Service service.StatisServer
 
 	Session *sessions.Session
 }
+
+const (
+	ADMINMODEL = "adminModel"
+	ORDERMODEL = "orderModel"
+	USERMODEL  = "userModel"
+)
 
 // 路径信息/statis/order/NaN-NaN-NaN/count
 
@@ -48,11 +55,48 @@ func (sc *StatisController) GetCount() mvc.Response {
 	var result int64
 	switch mode {
 	case "admin":
-		result = sc.Service.GetAdminDailyCount(getDate)
+		sessionStatus := sc.Session.Get(ADMINMODEL + getDate)
+		if sessionStatus == nil {
+			result = sc.Service.GetAdminDailyCount(getDate)
+			sc.Session.Set(ADMINMODEL+getDate, result)
+		} else {
+			sessionResult := sessionStatus.(int64)
+			return mvc.Response{
+				Object: map[string]interface{}{
+					"status": util.RECODE_OK,
+					"count":  sessionResult,
+				},
+			}
+		}
+
 	case "user":
-		result = sc.Service.GetUserDailyCount(getDate)
+		sessionStatus := sc.Session.Get(USERMODEL + getDate)
+		if sessionStatus == nil {
+			result = sc.Service.GetUserDailyCount(getDate)
+			sc.Session.Set(USERMODEL+getDate, result)
+		} else {
+			sessionResult := sessionStatus.(int64)
+			return mvc.Response{
+				Object: map[string]interface{}{
+					"status": util.RECODE_OK,
+					"count":  sessionResult,
+				},
+			}
+		}
 	case "order":
-		result = sc.Service.GetOrderDailyCount(getDate)
+		sessionStatus := sc.Session.Get(ORDERMODEL + getDate)
+		if sessionStatus == nil {
+			result = sc.Service.GetOrderDailyCount(getDate)
+			sc.Session.Set(ORDERMODEL+getDate, result)
+		} else {
+			sessionResult := sessionStatus.(int64)
+			return mvc.Response{
+				Object: map[string]interface{}{
+					"status": util.RECODE_OK,
+					"count":  sessionResult,
+				},
+			}
+		}
 
 	}
 

@@ -87,8 +87,10 @@ func mvcHandle(app *iris.Application, config *config.AppConfig) {
 		Cookie:  "sessioncookie",
 		Expires: 24 * time.Hour,
 	})
+	//设置redis为session同步数据库
+	redis := datasource.NewRedis()
+	sessionManage.UseDatabase(redis)
 	//获取数据库引擎
-	println(config)
 	engine := datasource.Engine_sql(config)
 	//获取数据服务
 	adminService := service.NewAdminService(engine)
