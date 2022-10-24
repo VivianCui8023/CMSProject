@@ -113,7 +113,13 @@ func mvcHandle(app *iris.Application, config *config.AppConfig) {
 	statis.Handle(new(controller.StatisController))
 
 	//订单详情功能
-
+	orderServer := service.NewOrderDetailServer(engine)
+	orders := mvc.New(app.Party("/bos/orders"))
+	orders.Register(
+		orderServer,
+		sessionManage.Start,
+	)
+	orders.Handle(new(controller.OrderController))
 	//用户信息功能
 	usersServer := service.NewUserService(engine)
 	users := mvc.New(app.Party("/v1/users"))
