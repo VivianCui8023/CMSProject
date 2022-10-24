@@ -25,7 +25,12 @@ func Engine_sql(config *config.AppConfig) *xorm.Engine {
 	err = engine.Sync2(
 		new(model.Admin),
 		new(model.User),
-		new(model.UserOrder))
+		new(model.UserOrder),
+		new(model.OrderStatus),
+		new(model.City),
+		new(model.Shop),
+		new(model.Permission),
+		new(model.Address))
 	if err != nil {
 		panic(err.Error())
 	}

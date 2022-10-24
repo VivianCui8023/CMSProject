@@ -163,3 +163,24 @@ func (ac *AdminController) GetCount() mvc.Response {
 		},
 	}
 }
+
+type LimitOffset struct {
+	Limit  int `json:"limit"`
+	Offset int `json:"offset"`
+}
+
+func (ac *AdminController) PostInfo() mvc.Response {
+	var para LimitOffset
+	err := ac.Ctx.ReadJSON(&para)
+	if err != nil {
+		panic(err.Error())
+	}
+	info := make([]model.Admin, 0)
+	info = ac.Service.PostAdminInfo(para.Limit, para.Offset)
+	return mvc.Response{
+		Object: map[string]interface{}{
+			"status": util.RECODE_OK,
+			"info":   info,
+		},
+	}
+}

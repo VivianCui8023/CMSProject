@@ -20,6 +20,8 @@ type AdminService interface {
 
 	//统计方法（未实现）
 	GetAdminCount() (int64, error)
+
+	PostAdminInfo(offset, limit int) []model.Admin
 }
 
 // 定义一个AdminService的（内部）实现类,注意这个实现类首字母小写
@@ -55,4 +57,14 @@ func (ads *adminService) GetAdminCount() (int64, error) {
 	}
 
 	return total, nil
+}
+
+func (ads *adminService) PostAdminInfo(offset, limit int) []model.Admin {
+	adminInfo := make([]model.Admin, 0)
+	//limit（参数1，参数2）参数1是每页多少内容，参数2是查询起始位置，需要计算一下offset
+	err := ads.engine.Limit(offset, limit*offset).Find(&adminInfo)
+	if err != nil {
+		panic(err.Error())
+	}
+	return adminInfo
 }

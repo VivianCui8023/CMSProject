@@ -10,5 +10,5 @@ type City struct {
 	Longitude float32 `xorm:"default 0" json:"longitude"`  //城市经度
 	Latitude  float32 `xorm:"default 0" json:"latitude"`   //城市纬度
 	AreaCode  string  `xorm:"varchar(6)" json:"area_code"` //城市的地区编码
-	Abbr      string  `xorm:"varchar(12)" json:"abbr"`     //城市的拼音缩写
+	Addr      string  `xorm:"varchar(12)" json:"addr"`     //城市的拼音缩写
 }
