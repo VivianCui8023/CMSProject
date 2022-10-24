@@ -111,4 +111,15 @@ func mvcHandle(app *iris.Application, config *config.AppConfig) {
 		sessionManage.Start,
 	)
 	statis.Handle(new(controller.StatisController))
+
+	//订单详情功能
+
+	//用户信息功能
+	usersServer := service.NewUserService(engine)
+	users := mvc.New(app.Party("/v1/users"))
+	users.Register(
+		usersServer,
+		sessionManage.Start,
+	)
+	users.Handle(new(controller.UserController))
 }
