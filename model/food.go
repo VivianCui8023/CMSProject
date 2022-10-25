@@ -1,6 +1,6 @@
 package model
 
-type food struct {
+type Food struct {
 	Id          int           `json:"item_id"`
 	Name        string        `json:"name"`
 	Description string        `json:"description"`

@@ -129,4 +129,12 @@ func mvcHandle(app *iris.Application, config *config.AppConfig) {
 	)
 	users.Handle(new(controller.UserController))
 
+	//食品信息功能
+	foodServer := service.NewFoodServer(engine)
+	foods := mvc.New(app.Party("/foods"))
+	foods.Register(
+		foodServer,
+	)
+	foods.Handle(new(controller.FoodController))
+
 }

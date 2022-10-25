@@ -30,7 +30,9 @@ func Engine_sql(config *config.AppConfig) *xorm.Engine {
 		new(model.City),
 		new(model.Shop),
 		new(model.Permission),
-		new(model.Address))
+		new(model.Address),
+		new(model.Food),
+		new(model.FoodCategory))
 	if err != nil {
 		panic(err.Error())
 	}
