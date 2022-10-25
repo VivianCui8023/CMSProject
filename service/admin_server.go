@@ -3,6 +3,7 @@ package service
 import (
 	"fmt"
 	"github.com/go-xorm/xorm"
+	"github.com/kataras/iris/v12"
 	"webProject/model"
 )
 
@@ -18,10 +19,12 @@ type AdminService interface {
 	//数据库查询方法
 	GetAdminNameAndPassword(name string, pwd string) (model.Admin, bool)
 
-	//统计方法（未实现）
+	//统计方法
 	GetAdminCount() (int64, error)
 
 	PostAdminInfo(offset, limit int) []model.Admin
+
+	PostAvatar(adminId int, fileName string) error
 }
 
 // 定义一个AdminService的（内部）实现类,注意这个实现类首字母小写
@@ -67,4 +70,15 @@ func (ads *adminService) PostAdminInfo(offset, limit int) []model.Admin {
 		panic(err.Error())
 	}
 	return adminInfo
+}
+
+// 更新头像数据到数据库中
+func (ads *adminService) PostAvatar(adminId int, fileName string) error {
+	admin := model.Admin{
+		Avatar: fileName,
+	}
+	engin := ads.engine
+	affected, err := engin.ID(adminId).Cols("avatar").Update(&admin)
+	iris.New().Logger().Info("更新记录：" + string(affected))
+	return err
 }

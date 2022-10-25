@@ -128,4 +128,5 @@ func mvcHandle(app *iris.Application, config *config.AppConfig) {
 		sessionManage.Start,
 	)
 	users.Handle(new(controller.UserController))
+
 }

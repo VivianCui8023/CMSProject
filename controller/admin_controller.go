@@ -6,6 +6,9 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
 	"github.com/kataras/iris/v12/sessions"
+	"io"
+	"os"
+	"strconv"
 	"webProject/model"
 	"webProject/service"
 	"webProject/util"
@@ -183,4 +186,69 @@ func (ac *AdminController) PostInfo() mvc.Response {
 			"info":   info,
 		},
 	}
+}
+
+// 管理员用户头像上传/admin/update/avatar/1 post
+// BeforeActivation支持自定义回调事件，用来自定义控制器与处理路径，其他的会自动处理匹配
+
+func (ac AdminController) BeforeActivation(b mvc.BeforeActivation) {
+	b.Handle("POST", "/update/avatar/{adminId}", "PostAvatar")
+}
+
+func (ac AdminController) PostAvatar() mvc.Response {
+	adminID := ac.Ctx.Params().Get("adminId")
+	iris.New().Logger().Info(adminID)
+	file, info, err := ac.Ctx.FormFile("file")
+	if err != nil {
+		//这个地方不能用panic
+		iris.New().Logger().Error(err.Error())
+		return mvc.Response{
+			Object: map[string]interface{}{
+				"status":  util.RECODE_FAIL,
+				"type":    util.RESPMSG_ERROR_PICTUREADD,
+				"message": util.Recode2Text(util.RESPMSG_ERROR_PICTUREADD),
+			},
+		}
+
+	}
+	defer file.Close()
+	fileName := info.Filename
+	//文件放在本地目录upload
+	out, err := os.OpenFile("./uploads/"+fileName, os.O_WRONLY|os.O_CREATE, 0666)
+
+	if err != nil {
+		iris.New().Logger().Error(err.Error())
+		return mvc.Response{
+			Object: map[string]interface{}{
+				"status":  util.RECODE_FAIL,
+				"type":    util.RESPMSG_ERROR_PICTUREADD,
+				"message": util.Recode2Text(util.RESPMSG_ERROR_PICTUREADD),
+			},
+		}
+	}
+	iris.New().Logger().Info("文件路径：" + out.Name())
+	defer out.Close()
+
+	_, err = io.Copy(out, file)
+
+	if err != nil {
+		iris.New().Logger().Error(err.Error())
+		return mvc.Response{
+			Object: map[string]interface{}{
+				"status":  util.RECODE_FAIL,
+				"type":    util.RESPMSG_ERROR_PICTUREADD,
+				"message": util.Recode2Text(util.RESPMSG_ERROR_PICTUREADD),
+			},
+		}
+	}
+	intAdminId, _ := strconv.Atoi(adminID)
+	//更新头像信息到数据库中
+	err = ac.Service.PostAvatar(intAdminId, fileName)
+	return mvc.Response{
+		Object: map[string]interface{}{
+			"status":   util.RECODE_OK,
+			"img_path": fileName,
+		},
+	}
+
 }
